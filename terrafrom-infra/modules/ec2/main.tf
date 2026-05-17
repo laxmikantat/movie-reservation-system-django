@@ -11,7 +11,12 @@ resource "aws_instance" "web_server" {
 
   user_data = var.user_data
 
+  root_block_device {
+    volume_size = var.volume_size
+    volume_type = var.volume_type
+  }
+
   tags = {
     Name = "web-server"
   }
-}
+} # <--- Moved closing brace here
