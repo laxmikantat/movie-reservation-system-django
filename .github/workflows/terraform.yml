@@ -27,24 +27,29 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: terrafrom-infra
+
     steps:
-      # =====================================================
+
+      # ==================================================
       # Checkout Repository
-      # =====================================================
+      # ==================================================
 
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # =====================================================
+      # ==================================================
       # Setup Terraform
-      # =====================================================
+      # ==================================================
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # =====================================================
+      # ==================================================
       # Configure AWS Credentials
-      # =====================================================
+      # ==================================================
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -53,32 +58,32 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # =====================================================
+      # ==================================================
       # Terraform Init
-      # =====================================================
+      # ==================================================
 
       - name: Terraform Init
         run: |
           terraform init \
           -backend-config="environments/${{ github.event.inputs.environment }}/backend.hcl"
 
-      # =====================================================
+      # ==================================================
       # Terraform Validate
-      # =====================================================
+      # ==================================================
 
       - name: Terraform Validate
         run: terraform validate
 
-      # =====================================================
+      # ==================================================
       # Terraform Format Check
-      # =====================================================
+      # ==================================================
 
       - name: Terraform Format Check
         run: terraform fmt -check
 
-      # =====================================================
+      # ==================================================
       # Terraform Plan
-      # =====================================================
+      # ==================================================
 
       - name: Terraform Plan
         if: github.event.inputs.action == 'plan'
@@ -86,9 +91,9 @@ jobs:
           terraform plan \
           -var-file="environments/${{ github.event.inputs.environment }}/terraform.tfvars"
 
-      # =====================================================
+      # ==================================================
       # Terraform Apply
-      # =====================================================
+      # ==================================================
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
@@ -96,5 +101,12 @@ jobs:
           terraform apply -auto-approve \
           -var-file="environments/${{ github.event.inputs.environment }}/terraform.tfvars"
 
-      # =====================================================
-      #
+      # ==================================================
+      # Terraform Destroy
+      # ==================================================
+
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: |
+          terraform destroy -auto-approve \
+          -var-file="environments/${{ github.event.inputs.environment }}/terraform.tfvars"
