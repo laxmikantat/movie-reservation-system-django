@@ -66,7 +66,6 @@ jobs:
         run: |
           terraform init \
           -backend-config="environments/${{ github.event.inputs.environment }}/backend.hcl"
-          -reconfigure
       # ==================================================
       # Terraform Validate
       # ==================================================
