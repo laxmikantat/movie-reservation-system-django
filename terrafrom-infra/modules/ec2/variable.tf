@@ -9,6 +9,12 @@ variable "user_data" {}
 
 variable "key_name" {}
 
-variable "volume_size" {}
+variable "volume_size" {
+  type    = number
+  default = 20
+}
 
-variable "volume_type" {}
+variable "volume_type" {
+  type    = string
+  default = "gp3"
+}
