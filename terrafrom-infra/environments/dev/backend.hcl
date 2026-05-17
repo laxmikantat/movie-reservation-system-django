@@ -1,4 +1,4 @@
-bucket       = "my-terraform-state-bucketrr"
+bucket       = "my-terraform-state-bucketrrr"
 key          = "dev/terraform.tfstate"
 region       = "us-east-1"
 use_lockfile = true
